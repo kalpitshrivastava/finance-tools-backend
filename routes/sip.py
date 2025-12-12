@@ -18,9 +18,10 @@ def calculate_sip():
         fv = SIP * (((1 + r)**months - 1) / r) * (1 + r)
 
         return jsonify({
-            "futureValue": round(fv, 2),
-            "totalInvested": round(SIP * months, 2),
-            "totalReturns": round(fv - (SIP * months), 2)
+            "corpus": round(fv, 2),
+            "investment": round(SIP * months, 2),
+            "returns": round(fv - (SIP * months), 2)
         })
+
     except Exception as e:
         return jsonify({"error": str(e)})

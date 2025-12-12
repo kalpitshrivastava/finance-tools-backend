@@ -30,12 +30,8 @@ def calculate_salary():
         in_hand = ctc - pf - professional_tax - tax
 
         return jsonify({
-            "basic": round(basic, 2),
-            "hra": round(hra, 2),
-            "pf": round(pf, 2),
-            "professionalTax": round(professional_tax, 2),
-            "tax": round(tax, 2),
-            "inHand": round(in_hand, 2)
+            "netSalary": round(in_hand, 2),
+            "deductions": round(tax + pf + professional_tax, 2)
         })
     except Exception as e:
         return jsonify({"error": str(e)})
