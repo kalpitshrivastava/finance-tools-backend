@@ -8,39 +8,48 @@ def calculate_tax():
     try:
         annual_income = float(data.get("annualIncome", 0))
         regime = data.get("regime", "old")  # "old" or "new"
-        tax = 0
+
+        slab_info = []
 
         if regime == "old":
-            # Old Regime FY 2025-26 slabs (example)
-            if annual_income <= 250000:
-                tax = 0
-            elif annual_income <= 500000:
-                tax = (annual_income - 250000) * 0.05
-            elif annual_income <= 1000000:
-                tax = 12500 + (annual_income - 500000) * 0.2
-            else:
-                tax = 112500 + (annual_income - 1000000) * 0.3
+            # Old Regime FY 2025-26 slabs
+            slabs = [
+                (0, 250000, 0),
+                (250001, 500000, 0.05),
+                (500001, 1000000, 0.2),
+                (1000001, float("inf"), 0.3)
+            ]
         else:
-            # New Regime FY 2025-26 slabs (example)
-            if annual_income <= 300000:
-                tax = 0
-            elif annual_income <= 600000:
-                tax = (annual_income - 300000) * 0.05
-            elif annual_income <= 900000:
-                tax = 15000 + (annual_income - 600000) * 0.1
-            elif annual_income <= 1200000:
-                tax = 45000 + (annual_income - 900000) * 0.15
-            elif annual_income <= 1500000:
-                tax = 90000 + (annual_income - 1200000) * 0.2
-            else:
-                tax = 150000 + (annual_income - 1500000) * 0.3
+            # New Regime FY 2025-26 slabs
+            slabs = [
+                (0, 300000, 0),
+                (300001, 600000, 0.05),
+                (600001, 900000, 0.1),
+                (900001, 1200000, 0.15),
+                (1200001, 1500000, 0.2),
+                (1500001, float("inf"), 0.3)
+            ]
 
-        tax = round(tax, 2)
-        net_income = annual_income - tax
+        total_tax = 0
+
+        for lower, upper, rate in slabs:
+            if annual_income > lower:
+                taxable = min(annual_income - lower, upper - lower)
+                slab_tax = round(taxable * rate, 2)
+                slab_info.append({
+                    "slab": f"₹{int(lower)+1} - ₹{'∞' if upper==float('inf') else int(upper)}",
+                    "taxableIncome": round(taxable, 2),
+                    "taxRate": rate,
+                    "tax": slab_tax
+                })
+                total_tax += slab_tax
+
+        net_income = annual_income - total_tax
 
         return jsonify({
-            "tax": tax,
-            "netIncome": net_income
+            "tax": round(total_tax, 2),
+            "netIncome": round(net_income, 2),
+            "slabs": slab_info
         })
 
     except Exception as e:

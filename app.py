@@ -5,6 +5,7 @@ from routes.sip import sip_bp
 from routes.fd import fd_bp
 from routes.tax import tax_bp
 from routes.salary import salary_bp
+from routes.lcmf import lcmf_bp
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.register_blueprint(sip_bp, url_prefix="/api/sip")
 app.register_blueprint(fd_bp, url_prefix="/api/fd")
 app.register_blueprint(tax_bp, url_prefix="/api/tax")
 app.register_blueprint(salary_bp, url_prefix="/api/salary")
+app.register_blueprint(lcmf_bp, url_prefix="/api/lcmf")
 
 @app.route("/")
 def home():
