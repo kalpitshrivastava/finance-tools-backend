@@ -10,7 +10,7 @@ from routes.lcmf import lcmf_bp
 app = Flask(__name__)
 
 # Allow both local and production frontend origins
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://finance-tools-oz9k.onrender.com"]}})
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://finance-tools-oz9k.onrender.com","https://finance-tools-oz9k.onrender.com"]}})
 
 # Register blueprints
 app.register_blueprint(emi_bp, url_prefix="/api/emi")
